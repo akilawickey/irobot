@@ -10,7 +10,7 @@ while(1):
     _,frame = cap.read()
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     # show image
-    cv2.imshow('frame', hsv)
+    cv2.imshow('frame', frame)
 
     # if key pressed is 'Esc' then exit the loop
     if cv2.waitKey(33)== 27:
