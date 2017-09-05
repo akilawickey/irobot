@@ -1,39 +1,51 @@
 import cv2
+import imutils
 import numpy as np
+import RPi.GPIO as GPIO  
+import time
 
-class Robo_main:
+cam = cv2.VideoCapture(1)
 
-	def __init__(self):
+# GPIO Setup  
 
-		self.name = 'Navigating....'
-
-	def camera_feed(self):
-
-		# create video capture
-		cap = cv2.VideoCapture(0)
-				# Loop to continuously get images
-		while(1):
-		    # Read the frames frome a camera
-		    _,frame = cap.read()
-		    # frame = cv2.GaussianBlur(frame,(5,5),0)
-
-		    # show image
-		    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-		    # thresh = cv2.inRange(hsv,np.array((50, 80, 80)), np.array((120, 255, 255)))
-		    # print thresh
-		    cv2.imshow('frame', hsv)
-
-		    # if key pressed is 'Esc' then exit the loop
-		    if cv2.waitKey(33)== 27:
-		    	print 'Bye....'
-		        break
-
-				# Clean up and exit the program
-			cv2.destroyAllWindows()
-			cap.release()
+GPIO.setmode(GPIO.BCM)  
+GPIO.setup(23, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)  #GPIO of Slave 
 
 
+# Begin Loop  
+try:
+    while True:
+        ret, frame = cam.read()
 
-robo = Robo_main()
-print robo.name
-robo.camera_feed()
+        # frame = imutils.resize(frame, width=600)
+        frame =  cv2.bilateralFilter(frame,9,75,75)
+        # cv2.imshow("test", frame)
+        if GPIO.input(23):
+  
+            hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+            # show image
+            blueLower = (75, 109, 50)
+            blueUpper = (130, 255, 255)
+
+            greenLower = (50, 109, 20)
+            greenUpper = (70, 255, 255)
+
+            redLower = (160, 50, 120)
+            redUpper = (179, 255, 255)
+
+            blue_mask = cv2.inRange(hsv, blueLower, blueUpper)
+            green_mask = cv2.inRange(hsv, greenLower, greenUpper)
+            red_mask = cv2.inRange(hsv, redLower, redUpper)
+            # cv2.imwrite('test123.png',red_mask)
+            mask = blue_mask + green_mask + red_mask
+
+            if np.array_equal(mask, red_mask):
+                print "Red Box"
+            elif np.array_equal(mask, green_mask):
+                print "Green Box"
+            elif np.array_equal(mask, blue_mask):
+                print "Blue Box" 
+
+
+except KeyboardInterrupt: # trap a CTRL+C keyboard interrupt    
+    GPIO.cleanup() # resets all GPIO ports used by this program

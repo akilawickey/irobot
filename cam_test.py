@@ -8,9 +8,9 @@ cap = cv2.VideoCapture(0)
 while(1):
     # Read the frames frome a camera
     _,frame = cap.read()
-
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     # show image
-    cv2.imshow('frame', frame)
+    cv2.imshow('frame', hsv)
 
     # if key pressed is 'Esc' then exit the loop
     if cv2.waitKey(33)== 27:
