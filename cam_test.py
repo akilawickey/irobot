@@ -28,7 +28,7 @@ while(1):
     blue_mask = cv2.inRange(hsv, blueLower, blueUpper)
     green_mask = cv2.inRange(hsv, greenLower, greenUpper)
     red_mask = cv2.inRange(hsv, redLower, redUpper)
-    cv2.line(green_mask,(160,0),(160,240),(255,0,0),2)
+    #cv2.line(green_mask,(160,0),(160,240),(255,0,0),2)
     # show image
     cv2.imshow('frame', hsv)
 
