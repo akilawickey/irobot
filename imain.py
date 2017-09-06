@@ -10,6 +10,7 @@ import time
 
 class ImageDetect(threading.Thread):
     def __init__(self,detectM):
+        threading.Thread.__init__(self)
         self.cam = cv2.VideoCapture(0)
         self.height = 240
         self.width = 320
