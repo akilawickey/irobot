@@ -163,8 +163,10 @@ class ImageDetect(threading.Thread):
 
         else:
             while True:
-                self.readFrames(self.cam)
-                print "clearing frame buffer"
+                frame = None
+                ret, frame = self.readFrames(self.cam)
+                if frame:
+                    print "clearing frame buffer"
 
 
 
