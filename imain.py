@@ -111,7 +111,7 @@ class ImageDetect(threading.Thread):
 
     def runBoxDetect(self):
         print "-----------------------------------------------"
-        print "+++++++++++++++ Line Navigation +++++++++++++++"
+        print "+++++++++++++++ Box Detect +++++++++++++++"
         print "-----------------------------------------------"
 
         frame = self.readFrames(self.cam)
@@ -164,6 +164,7 @@ class ImageDetect(threading.Thread):
         else:
             while True:
                 self.readFrames(self.cam)
+                print "clearing frame buffer"
 
 
 
