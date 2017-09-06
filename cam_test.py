@@ -16,11 +16,11 @@ while(1):
     _,frame = cap.read()
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    blueLower = (90, 50, 50)
+    blueLower = (100, 50, 50)
     blueUpper = (120, 255, 255)
 
-    greenLower = (53, 74, 50)
-    greenUpper = (80, 147, 255)
+    greenLower = (53, 150, 0)
+    greenUpper = (90, 255, 255)
 
     redLower = (160, 100, 120)
     redUpper = (179, 255, 255)
@@ -28,10 +28,10 @@ while(1):
     blue_mask = cv2.inRange(hsv, blueLower, blueUpper)
     green_mask = cv2.inRange(hsv, greenLower, greenUpper)
     red_mask = cv2.inRange(hsv, redLower, redUpper)
-    cv2.line(green_mask,(160,0),(160,240),(255,0,0),2)
+    # cv2.line(green_mask,(160,0),(160,240),(255,0,0),2)
     # show image
     
-    cv2.imshow('frame', hsv)
+    cv2.imshow('frame', green_mask)
 
     # if key pressed is 'Esc' then exit the loop
     if cv2.waitKey(33)== 27:
