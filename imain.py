@@ -111,7 +111,7 @@ class ImageDetect(threading.Thread):
 
     def runBoxDetect(self):
         print "-----------------------------------------------"
-        print "+++++++++++++++ Box Detect +++++++++++++++"
+        print "++++++++++++++++ Box Detect +++++++++++++++++++"
         print "-----------------------------------------------"
 
         frame = self.readFrames(self.cam)
@@ -133,6 +133,7 @@ class ImageDetect(threading.Thread):
 
         color = self.detect_box(red_count, blue_count, green_count, red_mask, blue_mask, green_mask)
         self.color = color
+        return
 
 
 
@@ -154,12 +155,17 @@ class ImageDetect(threading.Thread):
             mask = cv2.inRange(hsv, self.redLower, self.redUpper)
 
         self.arrow_detect(mask)
+        return
 
 
     def run(self):
         if self.func == True:
             while True:
                 self.runBoxDetect()
+
+            while True:
+                self.arrow_detect(self.color)
+
 
         else:
             while True:

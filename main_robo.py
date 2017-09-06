@@ -52,6 +52,8 @@ def direction_identify(mat):
     print
 
 
+
+
 # Begin Loop  
 try:
     while True:
@@ -107,26 +109,21 @@ try:
                 print "green"
             else:
                 print"cant identify"
-            # if np.array_equal(mask, red_mask):
-            #     print "Red Box"
-            #     time.sleep(3)
-                
-            # elif np.array_equal(mask, green_mask):
-            #     print "Green Box"
-            #     time.sleep(3)
-                
-            # elif np.array_equal(mask, blue_mask):
-            #     print "Blue Box" 
-            #     time.sleep(3)
+
+
+
             for i in range(9):
                 ret, frame = cam.read()
+
+
+                
         if True:
 
             print 'line navigation'
            
             ret, frame = cam.read()
 
-            # frame = cv.QueryFrame(capture)
+
             
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             # print hsv
@@ -137,9 +134,7 @@ try:
             green_mask = cv2.inRange(hsv, greenLower, greenUpper)
             red_mask = cv2.inRange(hsv, redLower, redUpper)
 
-            # cv2.imwrite('test123.png',blue_mask)
-            # print blue_mask
-            # mask = blue_mask + green_mask + red_mask
+
             red_count = 0
             green_count = 0
             blue_count = 0
