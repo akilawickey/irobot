@@ -23,18 +23,42 @@
   
 # except KeyboardInterrupt:          # trap a CTRL+C keyboard interrupt  
 #     GPIO.cleanup()                 # resets all GPIO ports used by this program  
-#!/usr/bin/env python
+# #!/usr/bin/env python
 
-import os
-from time import sleep
+# import os
+# from time import sleep
 
-import RPi.GPIO as GPIO
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(9, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)#added pull_up_down
-# # GPIO.setup(10, GPIO.IN, pull_up_down = GPIO.PUD_UP)#added pull_up_down
-# GPIO.setup(11, GPIO.IN, pull_up_down = GPIO.PUD_UP)#added pull_up_down
+# import RPi.GPIO as GPIO
+# GPIO.setmode(GPIO.BCM)
+# GPIO.setup(9, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)#added pull_up_down
+# # # GPIO.setup(10, GPIO.IN, pull_up_down = GPIO.PUD_UP)#added pull_up_down
+# # GPIO.setup(11, GPIO.IN, pull_up_down = GPIO.PUD_UP)#added pull_up_down
 
-if GPIO.input(9):
-    print("Pin 9 is HIGH")
-else:
-    print("Pin 9 is LOW")  
+# if GPIO.input(9):
+#     print("Pin 9 is HIGH")
+# else:
+#     print("Pin 9 is LOW")  
+import serial
+import time
+
+# cam = cv2.VideoCapture(0)
+ser = serial.Serial('/dev/ttyACM0', 115200, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE)
+
+while True:
+
+	if ser.read() == 'k':
+		print 'got k'
+		ser.write('a')
+		print 'a sent'
+		time.sleep(5)
+		print 'sending b'
+		ser.write('b')
+		time.sleep(5)
+		ser.write('a')
+		print 'a send'
+		time.sleep(5)
+		print 'sending b'
+		ser.write('b')
+
+ser.close()
+

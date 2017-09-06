@@ -165,7 +165,7 @@ try:
                 print "red"
                 print red_count
                 print
-                ser.write('1000')
+                ser.write('a')
 
                 if red_count > 100:
                     print 'giya'
