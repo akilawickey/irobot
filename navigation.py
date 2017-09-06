@@ -39,12 +39,16 @@ for i in range(1,10):
     r_blue_count=0
     r_green_count=0
 
+
+
     for i in range(height):
         for j in range(width/2):
             # if red_mask[i][j]==255:
             #     l_red_count+=1
             if green_mask[i][j]==255:
                 l_green_count+=1
+            if green_mask[i][j+width/2]==255:
+                r_green_count+=1           
             # if blue_mask[i][j]==255:
             #     l_blue_count+=1
 
@@ -53,15 +57,6 @@ for i in range(1,10):
     print "left greencount: " + str(l_green_count)
     # print "left blue count: " + str(l_blue_count)
     print
-
-    for i in range(height):
-        for j in range(width/2,width):
-            # if red_mask[i][j]==255:
-            #     r_red_count+=1
-            if green_mask[i][j]==255:
-                r_green_count+=1
-            # if blue_mask[i][j]==255:
-            #     r_blue_count+=1
 
     print
     # print "Right red_count: " + str(r_red_count)

@@ -7,7 +7,17 @@ import time
 import serial
 
 cam = cv2.VideoCapture(0)
-ser = serial.Serial('/dev/ttyACM0', 9600, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE)
+
+
+while(True):
+    try:
+        ser = serial.Serial('/dev/ttyACM0', 115200)
+
+        if ser: 
+            print 'serial available'
+            break
+    except:
+        print 'serial not available'
 
 height = 240
 width= 320
@@ -52,36 +62,55 @@ def direction_identify(mat):
     print "Right greencount: " + str(r_count)
     print
 
+def robo_adjust(mat):
 
+    l_count=0
+    r_count=0
+    diff= 0
 
+    print 'ok'
 
+    for i in range(height):
+        for j in range(width/2):
+
+            if mat[i][j]==255:
+                l_count+=1
+            if mat[i][j+width/2]==255:
+                r_count+=1           
+
+    # print
+    # print "left count: " + str(l_count)
+    # print
+
+    # print
+    # print "Right count: " + str(r_count)
+    # print
+
+    if l_count > r_count:
+        ser.write('L')
+    
 # Begin Loop  
 try:
+    print 'begin'
     while True:
-      
-        # frame = imutils.resize(frame, width=600)
-        # frame =  cv2.bilateralFilter(frame,9,75,75)
-        # cv2.imshow("test", frame)
-        # if GPIO.input(23):
-        if True:
-            # cv2.imshow("test", frame)
-        # k = cv2.waitKey(1)    
-            ret, frame = cam.read()
+        state = ser.read()
+        print state
+        if state == 'k':
+            print 'Arduino start communication'
+            ser.write('r')
+            print 'sent'
 
-            # frame = cv.QueryFrame(capture)
+        if ser.read() == 'c':
+            print 'c recived'
+ 
+            ret, frame = cam.read()
             
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-            # print hsv
-            # show image
-
-
+    
             blue_mask = cv2.inRange(hsv, blueLower, blueUpper)
             green_mask = cv2.inRange(hsv, greenLower, greenUpper)
             red_mask = cv2.inRange(hsv, redLower, redUpper)
 
-            # cv2.imwrite('test123.png',blue_mask)
-            # print blue_mask
-            # mask = blue_mask + green_mask + red_mask
             red_count=0
             blue_count=0
             green_count=0
@@ -95,52 +124,67 @@ try:
                     if blue_mask[i][j]==255:
                         blue_count+=1
 
-            print
+            print " "
             print "red_count: " + str(red_count)
             print "greencount: " + str(green_count)
             print "blue count: " + str(blue_count)
             print
 
-
             if red_count>blue_count and red_count>green_count:
                 print "red"
                 box_color_state = "red"
+                ser.write('a')
+                print 'send the signal a red'
 
             elif blue_count > green_count:
                 print "blue"
                 box_color_state = "blue"
+                ser.write('a')
+                print 'send the signal a blue'
 
             elif green_count>0:
                 print "green"
                 box_color_state = "green"
+                ser.write('a')
+                print 'send the signal a green'
 
             else:
                 print"cant identify"
-
-
+                ser.write('b')
+                print 'no boxes robo go'
 
             for i in range(9):
                 ret, frame = cam.read()
 
+        # if ser.read() == 'k':
 
-                
+        #     print 'box allign'
+           
+        #     ret, frame = cam.read()
+  
+        #     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        #     # print hsv
+        #     # show image
+        #     if box_color_state == "red"
+        #         mask = cv2.inRange(hsv, redLower, redUpper)
+        #     elif box_color_state == "blue"
+        #         mask = cv2.inRange(hsv, blueLower, blueUpper)
+        #     elif box_color_state == "green"
+        #         mask = cv2.inRange(hsv, greenLower, greenUpper)        
+
+ 
+            # robo_adjust(mask)
+     
         if False:
 
             print 'line navigation'
            
             ret, frame = cam.read()
-
-
-            
+  
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-            # print hsv
-            # show image
-
-
             blue_mask = cv2.inRange(hsv, blueLower, blueUpper)
             green_mask = cv2.inRange(hsv, greenLower, greenUpper)
             red_mask = cv2.inRange(hsv, redLower, redUpper)
-
 
             red_count = 0
             green_count = 0
@@ -199,6 +243,9 @@ try:
 
 except KeyboardInterrupt: # trap a CTRL+C keyboard interrupt    
     GPIO.cleanup() # resets all GPIO ports used by this program
+    ser.close()
+    cam.release()
+
 
 
 
